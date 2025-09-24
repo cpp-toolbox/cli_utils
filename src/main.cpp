@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "utility/collection_utils/collection_utils.hpp"
 #include "utility/meta_utils/meta_utils.hpp"
 #include "utility/text_utils/text_utils.hpp"
 
@@ -15,7 +16,11 @@ int main(int argc, char *argv[]) {
         "src/utility/text_utils/text_utils.hpp", "src/utility/text_utils/text_utils.cpp", true, true,
         signatures_to_block, meta_utils::FilterMode::Blacklist);
 
-    meta_utils::generate_string_invokers_program_wide({settings}, meta_utils::meta_types.get_concrete_types());
+    auto fs_settings = meta_utils::StringInvokerGenerationSettingsForHeaderSource(
+        "src/utility/fs_utils/fs_utils.hpp", "src/utility/fs_utils/fs_utils.cpp", true, true);
+
+    meta_utils::generate_string_invokers_program_wide({settings, fs_settings},
+                                                      meta_utils::meta_types.get_concrete_types());
 
 #ifdef GENERATED_META_PROGRAM
     meta_program::MetaProgram mp(meta_utils::concrete_types);
@@ -25,6 +30,9 @@ int main(int argc, char *argv[]) {
         if (arg1 == "--interactive") {
             // Interactive mode
             mp.start_interactive_invoker();
+        } else if (arg1 == "--list") {
+            // List mode
+            mp.list_all_available_functions();
         } else {
             // Invocation mode: everything after argv[1] is treated as the invocation string
             std::string invocation;
@@ -43,7 +51,7 @@ int main(int argc, char *argv[]) {
             }
         }
     } else {
-        std::cerr << "Usage: " << argv[0] << " [--interactive | <invocation>]" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " [--interactive | --list | <invocation>]" << std::endl;
         return 1;
     }
 #endif

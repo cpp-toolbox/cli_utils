@@ -2,6 +2,7 @@
 #define META_PROGRAM_HPP
 
 #include "../utility/text_utils/meta/text_utils.hpp"
+#include "../utility/fs_utils/meta/fs_utils.hpp"
 #include <optional>
 #include "../utility/meta_utils/meta_utils.hpp"
 #include "../utility/user_input/user_input.hpp"
@@ -17,6 +18,7 @@ public:
 public:
     std::vector<meta_utils::MetaType>  concrete_types;
     meta_text_utils::MetaTextUtils meta_text_utils{concrete_types};
+    meta_fs_utils::MetaFsUtils meta_fs_utils{concrete_types};
     std::string char_to_string(char &v) {
         return std::to_string(v);
 
@@ -237,6 +239,46 @@ public:
         if (buf.size() < sizeof(size_t)) return std::string();   size_t len;   std::memcpy(&len, buf.data(), sizeof(size_t));   if (buf.size() < sizeof(size_t) + len) return std::string();   return std::string(reinterpret_cast<const char*>(buf.data() + sizeof(size_t)), len);
 
     }
+    std::string std__filesystem__path_to_string(std::filesystem::path &p) {
+        return p.string();
+
+    }
+    std::filesystem::path string_to_std__filesystem__path(std::string &s) {
+        if (s.size() >= 2 && s.front() == '"' && s.back() == '"')     return std::filesystem::path(s.substr(1, s.size() - 2));   return std::filesystem::path(s);
+
+    }
+    std::vector<uint8_t> serialize_std__filesystem__path(std::filesystem::path &p) {
+        std::string s = p.string();   std::vector<uint8_t> buf;   size_t len = s.size();   buf.resize(sizeof(size_t) + len);   std::memcpy(buf.data(), &len, sizeof(size_t));   std::memcpy(buf.data() + sizeof(size_t), s.data(), len);   return buf;
+
+    }
+    size_t size_when_serialized_std__filesystem__path(std::filesystem::path &p) {
+        std::string s = p.string();   return sizeof(size_t) + s.size();
+
+    }
+    std::filesystem::path deserialize_std__filesystem__path(std::vector<uint8_t> &buf) {
+        if (buf.size() < sizeof(size_t)) return std::filesystem::path();   size_t len;   std::memcpy(&len, buf.data(), sizeof(size_t));   if (buf.size() < sizeof(size_t) + len) return std::filesystem::path();   return std::filesystem::path(std::string(reinterpret_cast<const char*>(buf.data() + sizeof(size_t)), len));
+
+    }
+    std::string std__regex_to_string(std::regex &r) {
+        return r.pattern();
+
+    }
+    std::regex string_to_std__regex(std::string &s) {
+        if (s.size() >= 2 && s.front() == '"' && s.back() == '"')     return std::regex(s.substr(1, s.size() - 2));   return std::regex(s);
+
+    }
+    std::vector<uint8_t> serialize_std__regex(std::regex &r) {
+        std::string pattern = r.pattern();   std::vector<uint8_t> buf;   size_t len = pattern.size();   buf.resize(sizeof(size_t) + len);   std::memcpy(buf.data(), &len, sizeof(size_t));   std::memcpy(buf.data() + sizeof(size_t), pattern.data(), len);   return buf;
+
+    }
+    size_t size_when_serialized_std__regex(std::regex &r) {
+        std::string pattern = r.pattern();   return sizeof(size_t) + pattern.size();
+
+    }
+    std::regex deserialize_std__regex(std::vector<uint8_t> &buf) {
+        if (buf.size() < sizeof(size_t)) return std::regex();   size_t len;   std::memcpy(&len, buf.data(), sizeof(size_t));   if (buf.size() < sizeof(size_t) + len) return std::regex();   return std::regex(std::string(reinterpret_cast<const char*>(buf.data() + sizeof(size_t)), len));
+
+    }
     std::string bool_to_string(bool &v) {
         return v ? "true" : "false";
 
@@ -274,9 +316,31 @@ public:
     meta_utils::MetaType deserialize_meta_utils__MetaType() {
 
     }
+    std::optional<std::filesystem::path> invoker_that_returns_std_filesystem_path(std::string &invocation) {
+        std::optional<std::filesystem::path> val;
+        val = meta_fs_utils.invoker_that_returns_std_filesystem_path(invocation);
+        if (val)
+            return val;
+        
+        return std::nullopt;
+
+    }
+    std::optional<std::vector<std::filesystem::path>> invoker_that_returns_std_vector_std_filesystem_path_(std::string &invocation) {
+        std::optional<std::vector<std::filesystem::path>> val;
+        val = meta_fs_utils.invoker_that_returns_std_vector_std_filesystem_path_(invocation);
+        if (val)
+            return val;
+        
+        return std::nullopt;
+
+    }
     std::optional<std::string> invoker_that_returns_std_string(std::string &invocation) {
         std::optional<std::string> val;
         val = meta_text_utils.invoker_that_returns_std_string(invocation);
+        if (val)
+            return val;
+        
+        val = meta_fs_utils.invoker_that_returns_std_string(invocation);
         if (val)
             return val;
         
@@ -286,6 +350,10 @@ public:
     std::optional<bool> invoker_that_returns_bool(std::string &invocation) {
         std::optional<bool> val;
         val = meta_text_utils.invoker_that_returns_bool(invocation);
+        if (val)
+            return val;
+        
+        val = meta_fs_utils.invoker_that_returns_bool(invocation);
         if (val)
             return val;
         
@@ -310,9 +378,31 @@ public:
         return std::nullopt;
 
     }
+    std::optional<std::function<std::filesystem::path()>> deferred_invoker_that_returns_std_filesystem_path(std::string &invocation) {
+        std::optional<std::function<std::filesystem::path()>> val;
+        val = meta_fs_utils.deferred_invoker_that_returns_std_filesystem_path(invocation);
+        if (val)
+            return val;
+        
+        return std::nullopt;
+
+    }
+    std::optional<std::function<std::vector<std::filesystem::path>()>> deferred_invoker_that_returns_std_vector_std_filesystem_path_(std::string &invocation) {
+        std::optional<std::function<std::vector<std::filesystem::path>()>> val;
+        val = meta_fs_utils.deferred_invoker_that_returns_std_vector_std_filesystem_path_(invocation);
+        if (val)
+            return val;
+        
+        return std::nullopt;
+
+    }
     std::optional<std::function<bool()>> deferred_invoker_that_returns_bool(std::string &invocation) {
         std::optional<std::function<bool()>> val;
         val = meta_text_utils.deferred_invoker_that_returns_bool(invocation);
+        if (val)
+            return val;
+        
+        val = meta_fs_utils.deferred_invoker_that_returns_bool(invocation);
         if (val)
             return val;
         
@@ -400,6 +490,17 @@ public:
                 std::cout << "Goodbye." << std::endl;
             }
         }
+
+    }
+    void list_all_available_functions() {
+        std::cout << "--- Functions in namespace: meta_text_utils ---" << std::endl;
+            for (const auto &mfs : meta_text_utils.all_meta_function_signatures) {
+                std::cout << mfs.to_string() << std::endl;
+            }
+            std::cout << "--- Functions in namespace: meta_fs_utils ---" << std::endl;
+            for (const auto &mfs : meta_fs_utils.all_meta_function_signatures) {
+                std::cout << mfs.to_string() << std::endl;
+            }
 
     }
 };
