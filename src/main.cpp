@@ -10,7 +10,10 @@
 #endif
 
 int main(int argc, char *argv[]) {
-    std::vector<std::string> signatures_to_block = {"Node parse_block(const std::string &s, size_t &pos)"};
+    std::vector<std::string> signatures_to_block = {
+        "Node parse_block(const std::string &s, size_t &pos)",
+        "std::vector<std::string> build_buffer(const Node &node)",
+        " Node parse_block(const std::string &s, size_t &pos, bool expand_vectors = true); "};
 
     auto settings = meta_utils::StringInvokerGenerationSettingsForHeaderSource(
         "src/utility/text_utils/text_utils.hpp", "src/utility/text_utils/text_utils.cpp", true, true,

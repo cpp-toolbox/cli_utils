@@ -259,26 +259,6 @@ public:
         if (buf.size() < sizeof(size_t)) return std::filesystem::path();   size_t len;   std::memcpy(&len, buf.data(), sizeof(size_t));   if (buf.size() < sizeof(size_t) + len) return std::filesystem::path();   return std::filesystem::path(std::string(reinterpret_cast<const char*>(buf.data() + sizeof(size_t)), len));
 
     }
-    std::string std__regex_to_string(std::regex &r) {
-        return r.pattern();
-
-    }
-    std::regex string_to_std__regex(std::string &s) {
-        if (s.size() >= 2 && s.front() == '"' && s.back() == '"')     return std::regex(s.substr(1, s.size() - 2));   return std::regex(s);
-
-    }
-    std::vector<uint8_t> serialize_std__regex(std::regex &r) {
-        std::string pattern = r.pattern();   std::vector<uint8_t> buf;   size_t len = pattern.size();   buf.resize(sizeof(size_t) + len);   std::memcpy(buf.data(), &len, sizeof(size_t));   std::memcpy(buf.data() + sizeof(size_t), pattern.data(), len);   return buf;
-
-    }
-    size_t size_when_serialized_std__regex(std::regex &r) {
-        std::string pattern = r.pattern();   return sizeof(size_t) + pattern.size();
-
-    }
-    std::regex deserialize_std__regex(std::vector<uint8_t> &buf) {
-        if (buf.size() < sizeof(size_t)) return std::regex();   size_t len;   std::memcpy(&len, buf.data(), sizeof(size_t));   if (buf.size() < sizeof(size_t) + len) return std::regex();   return std::regex(std::string(reinterpret_cast<const char*>(buf.data() + sizeof(size_t)), len));
-
-    }
     std::string bool_to_string(bool &v) {
         return v ? "true" : "false";
 
